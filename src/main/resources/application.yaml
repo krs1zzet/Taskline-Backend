@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: project-name
+
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+server:
+  port: ${SERVER_PORT:8080}
