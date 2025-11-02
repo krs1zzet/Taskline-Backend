@@ -17,14 +17,12 @@ import org.testcontainers.containers.PostgreSQLContainer;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class TaskLineApplicationTests {
 
-	// Tek bir container: test class boyunca açık kalır
 	@Container
 	static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine")
 			.withDatabaseName("testdb")
 			.withUsername("test")
 			.withPassword("test");
 
-	// Spring'e container'ın url/user/pass bilgisini ver
 	@DynamicPropertySource
 	static void registerProps(DynamicPropertyRegistry registry) {
 		registry.add("spring.datasource.url", postgres::getJdbcUrl);
