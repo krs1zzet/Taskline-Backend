@@ -26,12 +26,12 @@ class TaskControllerIT extends AbstractPostgresIT {
     @Test
     void post_then_get_task() throws Exception {
         var createJson = """
-                {
-                  "title": "From controller IT",
-                  "description": "desc from controller test",
-                  "status": "OPEN"
-                }
-                """;
+{
+  "title": "From controller IT",
+  "description": "desc from controller test"
+}
+""";
+
 
         // 1) POST /api/tasks
         MvcResult postResult = mvc.perform(
@@ -60,12 +60,11 @@ class TaskControllerIT extends AbstractPostgresIT {
     @Test
     void post_validation_error_returns_400() throws Exception {
         var invalidJson = """
-                {
-                  "title": "",
-                  "description": "missing title",
-                  "status": "OPEN"
-                }
-                """;
+{
+  "title": "",
+  "description": "missing title"
+}
+""";
 
         mvc.perform(post("/api/tasks")
                         .contentType(MediaType.APPLICATION_JSON)
