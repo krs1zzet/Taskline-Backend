@@ -2,10 +2,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+  flyway:
+    enabled: true
   test:
     database:
       replace: none
-  flyway:
-    enabled: true
-  liquibase:
-    enabled: false   
