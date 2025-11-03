@@ -23,10 +23,11 @@
 		<testcontainers.version>1.20.1</testcontainers.version>
 		<maven.surefire.version>3.2.5</maven.surefire.version>
 		<maven.failsafe.version>3.2.5</maven.failsafe.version>
+		<argLine></argLine> <!-- IDE için varsayılan boş değer -->
+
 	</properties>
 
 	<dependencies>
-
 		<!-- WEB -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -55,7 +56,6 @@
 			<artifactId>flyway-core</artifactId>
 			<version>11.15.0</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-database-postgresql</artifactId>
@@ -108,14 +108,12 @@
 			<version>${testcontainers.version}</version>
 			<scope>test</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>${testcontainers.version}</version>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -149,13 +147,25 @@
 				</configuration>
 			</plugin>
 
-			<!-- Unit testler -->
-
+			<!-- Unit testler (kısa özet + stdout/stderr dosyada, gürültü azaltma) -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${maven.surefire.version}</version>
 				<configuration>
+					<!-- JaCoCo vb. başka eklentiler argLine enjekte ederse bozmayalım -->
+					<argLine>${argLine} -Xshare:off -XX:+EnableDynamicAgentLoading</argLine>
+
+					<!-- Konsolde sade özet -->
+					<useFile>false</useFile>
+					<printSummary>true</printSummary>
+
+					<!-- Testlerin System.out/err çıktıları yalnızca dosyada -->
+					<redirectTestOutputToFile>true</redirectTestOutputToFile>
+
+					<trimStackTrace>true</trimStackTrace>
+
+					<!-- Hangi test sınıfları koşsun -->
 					<includes>
 						<include>**/*Test.java</include>
 						<include>**/*Tests.java</include>
@@ -163,18 +173,19 @@
 						<include>**/*IT.java</include>
 					</includes>
 
-					<printSummary>true</printSummary>
-					<redirectTestOutputToFile>true</redirectTestOutputToFile>
-					<useFile>true</useFile>
-					<trimStackTrace>true</trimStackTrace>
-					<argLine>-XX:+EnableDynamicAgentLoading</argLine>
+					<!-- Spring/Testcontainers loglarını kıs -->
 					<systemPropertyVariables>
 						<spring.profiles.active>test</spring.profiles.active>
+						<spring.main.banner-mode>off</spring.main.banner-mode>
+						<logging.level.root>WARN</logging.level.root>
+						<logging.level.org.springframework.test>WARN</logging.level.org.springframework.test>
+						<logging.level.org.testcontainers>ERROR</logging.level.org.testcontainers>
+						<logging.level.com.github.dockerjava>ERROR</logging.level.com.github.dockerjava>
 					</systemPropertyVariables>
 				</configuration>
 			</plugin>
 
-
+			<!-- IT'ler için -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
