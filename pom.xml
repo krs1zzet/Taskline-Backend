@@ -19,7 +19,6 @@
 	<description>TaskLine</description>
 
 	<properties>
-		<!-- CI'de 21 kuruyorsun -->
 		<java.version>21</java.version>
 		<testcontainers.version>1.20.1</testcontainers.version>
 		<maven.surefire.version>3.2.5</maven.surefire.version>
@@ -50,7 +49,7 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
-		<!-- FLYWAY – eksik olan buydu -->
+		<!-- FLYWAY -->
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
@@ -60,7 +59,7 @@
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-database-postgresql</artifactId>
-			<version>11.15.0</version> <!-- flyway-core ile eşleşmeli -->
+			<version>11.15.0</version>
 			<scope>runtime</scope>
 		</dependency>
 
@@ -109,6 +108,7 @@
 			<version>${testcontainers.version}</version>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>postgresql</artifactId>
@@ -150,6 +150,7 @@
 			</plugin>
 
 			<!-- Unit testler -->
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -159,13 +160,21 @@
 						<include>**/*Test.java</include>
 						<include>**/*Tests.java</include>
 						<include>**/*TestCase.java</include>
-						<!-- integration'lar da surefire'da koşsun istiyorsan bırak -->
 						<include>**/*IT.java</include>
 					</includes>
+
+					<printSummary>true</printSummary>
+					<redirectTestOutputToFile>true</redirectTestOutputToFile>
+					<useFile>true</useFile>
+					<trimStackTrace>true</trimStackTrace>
+					<argLine>-XX:+EnableDynamicAgentLoading</argLine>
+					<systemPropertyVariables>
+						<spring.profiles.active>test</spring.profiles.active>
+					</systemPropertyVariables>
 				</configuration>
 			</plugin>
 
-			<!-- IT akışı ayrı olsun dersen -->
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
