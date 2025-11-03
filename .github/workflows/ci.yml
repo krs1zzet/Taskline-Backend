@@ -28,6 +28,7 @@ jobs:
                 -Dsurefire.printSummary=true \
                 -Dsurefire.useFile=false \
                 test
+      
 
       # varsa txt raporlarını da konsola dökelim ki ekranda net gör
       - name: Print surefire reports (if any)
