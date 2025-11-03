@@ -1,29 +1,76 @@
 name: CI
 
 on:
-  pull_request:
-    branches: [ main ]
   push:
-    branches: [ main ]
+    branches:
+      - '**'
+  pull_request:
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      # 1) kodu al
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v4
+      # 2) docker hazır mı gör (debug için)
+      - name: Show Docker info
+        run: |
+          docker version
+          docker ps -a || true
+
+      # 3) testcontainers'ın maven içinden docker'a dokunabilmesi için izin ver
+      # github runner'da çoğunlukla gerek kalmıyor ama sorun yaşadığın için ekliyoruz
+      - name: Allow docker for current user
+        run: |
+          if [ -S /var/run/docker.sock ]; then
+            sudo chmod 666 /var/run/docker.sock
+          fi
+          docker ps || true
+
+      # 4) JDK
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 21
+          cache: maven
 
-      - uses: actions/cache@v4
+      # 5) build + test + integration-test (failsafe varsa) hepsi
+      # sen flyway'i açık kullanmak istediğin için "verify" daha mantıklı
+      - name: Build & test (verbose to console)
+        run: |
+          mvn -B -DtrimStackTrace=false \
+               -Dsurefire.printSummary=true \
+               -Dsurefire.useFile=false \
+               verify
+
+      # 6) raporları konsola bas
+      - name: Print surefire/failsafe reports
+        if: always()
+        run: |
+          for dir in target/surefire-reports target/failsafe-reports; do
+            if [ -d "$dir" ]; then
+              echo "===== $dir ====="
+              ls -l "$dir"
+              for f in "$dir"/*; do
+                [ -e "$f" ] || continue
+                echo "----- $f -----"
+                cat "$f"
+                echo
+              done
+            fi
+          done
+
+      # 7) indirilebilir yap
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-
-      - name: Run tests (JUnit + Testcontainers)
-        run: mvn -B test
+          name: test-reports
+          path: |
+            target/surefire-reports
+            target/failsafe-reports
+          if-no-files-found: ignore
