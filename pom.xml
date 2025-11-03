@@ -57,6 +57,13 @@
 			<version>11.15.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-database-postgresql</artifactId>
+			<version>11.15.0</version> <!-- flyway-core ile eşleşmeli -->
+			<scope>runtime</scope>
+		</dependency>
+
 		<!-- VALIDATION -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
