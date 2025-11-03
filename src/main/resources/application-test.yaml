@@ -1,9 +1,26 @@
 spring:
+  datasource:
+    # burada url/user vermiyoruz, testcontainers'tan geliyor
+    driver-class-name: org.postgresql.Driver
+
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none   # flyway kullandığın için
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+
   flyway:
     enabled: true
-  test:
-    database:
-      replace: none
+    # testte schema'yı sıfırlamak istersen:
+    clean-disabled: false
+    # prod'da gerekmez ama testte ilk migration'da sorun çıkarmaz
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+    # url/user/password'i AbstractPostgresIT veriyor
+
+logging:
+  level:
+    org.flywaydb: info
+    org.testcontainers: info

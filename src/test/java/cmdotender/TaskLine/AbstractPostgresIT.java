@@ -5,10 +5,9 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-
+import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.containers.PostgreSQLContainer;
 
 @ActiveProfiles("test")
 @Testcontainers
@@ -24,14 +23,23 @@ public abstract class AbstractPostgresIT {
 
 	@DynamicPropertySource
 	static void registerProps(DynamicPropertyRegistry r) {
+		// datasource'u konteynıra bağla
 		r.add("spring.datasource.url", postgres::getJdbcUrl);
 		r.add("spring.datasource.username", postgres::getUsername);
 		r.add("spring.datasource.password", postgres::getPassword);
 		r.add("spring.datasource.driver-class-name", () -> "org.postgresql.Driver");
+
+		// FLYWAY DE AYNI VERİTABANINA GİTSİN
+		r.add("spring.flyway.url", postgres::getJdbcUrl);
+		r.add("spring.flyway.user", postgres::getUsername);
+		r.add("spring.flyway.password", postgres::getPassword);
+
+		// istersen schema da verebilirsin:
+		// r.add("spring.flyway.schemas", () -> "public");
 	}
 
 	@BeforeAll
 	static void started() {
-		// Container ilk kullanılınca zaten başlar; ekstra bir şey yapmana gerek yok.
+		// container ilk erişimde başlıyor, ekstra yok
 	}
 }
