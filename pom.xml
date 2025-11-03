@@ -23,7 +23,7 @@
 		<testcontainers.version>1.20.1</testcontainers.version>
 		<maven.surefire.version>3.2.5</maven.surefire.version>
 		<maven.failsafe.version>3.2.5</maven.failsafe.version>
-		<argLine></argLine> <!-- IDE için varsayılan boş değer -->
+		<argLine/>
 
 	</properties>
 
@@ -147,33 +147,24 @@
 				</configuration>
 			</plugin>
 
-			<!-- Unit testler (kısa özet + stdout/stderr dosyada, gürültü azaltma) -->
+			<!-- Unit testler -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${maven.surefire.version}</version>
 				<configuration>
-					<!-- JaCoCo vb. başka eklentiler argLine enjekte ederse bozmayalım -->
-					<argLine>${argLine} -Xshare:off -XX:+EnableDynamicAgentLoading</argLine>
 
-					<!-- Konsolde sade özet -->
+					<argLine>${argLine} -Xshare:off -XX:+EnableDynamicAgentLoading</argLine>
 					<useFile>false</useFile>
 					<printSummary>true</printSummary>
-
-					<!-- Testlerin System.out/err çıktıları yalnızca dosyada -->
 					<redirectTestOutputToFile>true</redirectTestOutputToFile>
-
 					<trimStackTrace>true</trimStackTrace>
-
-					<!-- Hangi test sınıfları koşsun -->
 					<includes>
 						<include>**/*Test.java</include>
 						<include>**/*Tests.java</include>
 						<include>**/*TestCase.java</include>
 						<include>**/*IT.java</include>
 					</includes>
-
-					<!-- Spring/Testcontainers loglarını kıs -->
 					<systemPropertyVariables>
 						<spring.profiles.active>test</spring.profiles.active>
 						<spring.main.banner-mode>off</spring.main.banner-mode>
@@ -185,7 +176,6 @@
 				</configuration>
 			</plugin>
 
-			<!-- IT'ler için -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
