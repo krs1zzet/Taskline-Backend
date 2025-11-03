@@ -2,8 +2,10 @@ name: CI/CD
 
 on:
   push:
-    branches: ['**']
+    branches: [ '**' ]
   pull_request:
+    branches: ['main']
+
 
 permissions:
   contents: read
@@ -28,6 +30,7 @@ jobs:
   build_and_push:
     runs-on: ubuntu-latest
     needs: test
+    if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
 
@@ -47,21 +50,22 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_TOKEN }}
 
-      - name: Build & Push backend image
+      - name: Build & Push backend image (only tag 'latest' on main)
         uses: docker/build-push-action@v6
         with:
           context: .
           file: Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ steps.lower.outputs.owner_lc }}/taskline-backend:latest
-            ghcr.io/${{ steps.lower.outputs.owner_lc }}/taskline-backend:${{ github.sha }}
+              ghcr.io/${{ steps.lower.outputs.owner_lc }}/taskline-backend:${{ github.sha }}
+              ${{ startsWith(github.ref, 'refs/heads/main') && format('ghcr.io/{0}/taskline-backend:latest', steps.lower.outputs.owner_lc) || '' }}
           cache-from: type=registry,ref=ghcr.io/${{ steps.lower.outputs.owner_lc }}/taskline-backend:cache
           cache-to: type=registry,ref=ghcr.io/${{ steps.lower.outputs.owner_lc }}/taskline-backend:cache,mode=max
 
   deploy:
     runs-on: ubuntu-latest
     needs: build_and_push
+    if: github.ref == 'refs/heads/main'
     steps:
       - name: SSH deploy
         uses: appleboy/ssh-action@v1.2.0
