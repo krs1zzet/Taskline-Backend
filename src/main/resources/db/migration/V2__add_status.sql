@@ -1,2 +1,3 @@
-ALTER TABLE task ADD COLUMN status VARCHAR(30) NOT NULL DEFAULT 'OPEN';
-CREATE INDEX idx_task_status ON task(status);
+ALTER TABLE task
+ADD COLUMN IF NOT EXISTS status VARCHAR(255);
+CREATE INDEX IF NOT EXISTS idx_task_status ON task(status);

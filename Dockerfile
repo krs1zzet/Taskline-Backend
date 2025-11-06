@@ -1,3 +1,4 @@
+# ---- Build stage
 FROM maven:3.9-eclipse-temurin-21 AS build
 
 WORKDIR /app
@@ -5,7 +6,7 @@ WORKDIR /app
 COPY pom.xml ./
 COPY .mvn/ .mvn/
 COPY mvnw mvnw
-RUN ./mvnw -q -B -DskipTests dependency:go-offline
+RUN chmod +x mvnw && ./mvnw -q -B -DskipTests dependency:go-offline
 
 COPY src/ src/
 RUN ./mvnw -q -B -DskipTests package
@@ -16,9 +17,7 @@ RUN useradd -r -u 1001 spring
 USER spring
 
 WORKDIR /app
-
-ARG JAR_FILE=/app/target/*.jar
-COPY --from=build ${JAR_FILE} app.jar
+COPY --from=build /app/target/*.jar /app/app.jar
 
 EXPOSE 8080
 
