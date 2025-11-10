@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXIST task (
+CREATE TABLE task (
                       id            BIGSERIAL PRIMARY KEY,
                       title         VARCHAR(200) NOT NULL,
                       description   TEXT,
