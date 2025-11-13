@@ -23,23 +23,18 @@ public abstract class AbstractPostgresIT {
 
 	@DynamicPropertySource
 	static void registerProps(DynamicPropertyRegistry r) {
-		// datasource'u konteynıra bağla
 		r.add("spring.datasource.url", postgres::getJdbcUrl);
 		r.add("spring.datasource.username", postgres::getUsername);
 		r.add("spring.datasource.password", postgres::getPassword);
 		r.add("spring.datasource.driver-class-name", () -> "org.postgresql.Driver");
 
-		// FLYWAY DE AYNI VERİTABANINA GİTSİN
 		r.add("spring.flyway.url", postgres::getJdbcUrl);
 		r.add("spring.flyway.user", postgres::getUsername);
 		r.add("spring.flyway.password", postgres::getPassword);
 
-		// istersen schema da verebilirsin:
-		// r.add("spring.flyway.schemas", () -> "public");
 	}
 
 	@BeforeAll
 	static void started() {
-		// container ilk erişimde başlıyor, ekstra yok
 	}
 }
