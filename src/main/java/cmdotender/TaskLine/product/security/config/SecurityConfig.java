@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -55,18 +56,17 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        // Public endpoints
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(
-                                "/api/auth/**",
-                                "/actuator/**",
-                                "/health"
+//                                "/api/auth/**",
+//                                "/actuator/**",
+//                                "/health",
+                                "/error"
+
                         ).permitAll()
-                        // All others require auth
                         .anyRequest().authenticated()
                 )
-                // Şimdilik JWT filter yok, o yüzden filter ekleme kısmı çıkarıldı
-                .httpBasic(Customizer.withDefaults()); // Geçici olarak basic auth aktif
+                .httpBasic(Customizer.withDefaults());
 
         return http.build();
     }

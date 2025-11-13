@@ -22,6 +22,7 @@ public class JwtProperties {
     private long accessTtlSeconds = 900;
     private String issuer = "taskline";
     private Cookie cookie = new Cookie();
+    private String debug = "false";
 
     public Duration getAccessTtl() {
         return Duration.ofSeconds(accessTtlSeconds);

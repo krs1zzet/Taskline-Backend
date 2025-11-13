@@ -10,11 +10,7 @@ spring:
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: env,configprops
+
 
   jpa:
     hibernate:
@@ -30,9 +26,6 @@ management:
     clean-disabled: ${FLYWAY_CLEAN_DISABLED:true}
     locations: classpath:db/migration
 
-logging:
-  level:
-    root: ${LOG_ROOT_LEVEL:INFO}
 
 server:
   port: ${SERVER_PORT:8080}
@@ -50,6 +43,7 @@ security:
     secret: ${JWT_SECRET:ChangeThisSecretInProduction}
     access-ttl-seconds: ${JWT_ACCESS_TTL_SECONDS:900}
     issuer: ${JWT_ISSUER:taskline_app}
+    debug: ${JWT_DEBUG:true}
     cookie:
       name: ${JWT_COOKIE_NAME:taskline_token}
       http-only: true
@@ -58,4 +52,21 @@ security:
       path: ${JWT_COOKIE_PATH:/}
       domain: ${JWT_COOKIE_DOMAIN:}
 
+logging:
+  level:
+    org:
+      springframework:
+        security: ${LOG_SPRING_SECURITY_LEVEL:false}
+    root: ${LOG_ROOT_LEVEL:INFO}
+
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: env,configprops,health,info
+  endpoint:
+    health:
+          show-details: always
 
