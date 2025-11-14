@@ -52,6 +52,7 @@ security:
       path: ${JWT_COOKIE_PATH:/}
       domain: ${JWT_COOKIE_DOMAIN:}
 
+
 logging:
   level:
     org:
