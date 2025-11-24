@@ -144,7 +144,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO getCurrentUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if(authentication == null || authentication.getName() == null || "anonymousUser".equals(authentication.getName())) {
+        if(authentication == null || authentication.getName() == null || "anonymous".equals(authentication.getName())) {
             throw new ApiException(ErrorCode.UNAUTHORIZED, "Unauthorized");
         }
         User user = userRepository.findByUsername(authentication.getName())
