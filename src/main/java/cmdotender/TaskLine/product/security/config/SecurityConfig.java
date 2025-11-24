@@ -1,5 +1,6 @@
 package cmdotender.TaskLine.product.security.config;
 
+import cmdotender.TaskLine.product.logging.RequestLoggingFilter;
 import cmdotender.TaskLine.product.security.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -39,6 +40,12 @@ public class SecurityConfig {
     }
 
     @Bean
+    public RequestLoggingFilter requestLoggingFilter() {
+        return new RequestLoggingFilter();
+    }
+
+
+    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration conf = new CorsConfiguration();
         conf.setAllowedOrigins(corsProperties.getAllowedOrigins());
@@ -54,6 +61,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
+            RequestLoggingFilter requestLoggingFilter,
             JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
@@ -80,7 +88,11 @@ public class SecurityConfig {
         .addFilterBefore(
                 jwtAuthenticationFilter,
                 UsernamePasswordAuthenticationFilter.class
-        );
+        )
+                .addFilterAfter(
+                        requestLoggingFilter,
+                        JwtAuthenticationFilter.class
+                );
 
         return http.build();
     }
