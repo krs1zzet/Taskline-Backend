@@ -5,9 +5,6 @@ import java.util.List;
 @Data
 public class AccessibleResourceDTO {
 
-
-
-
         private String id;
         private String url;
         private String name;
