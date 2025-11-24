@@ -2,8 +2,8 @@ package cmdotender.TaskLine.product.security.filter;
 
 import cmdotender.TaskLine.features.auth.service.JwtService;
 import cmdotender.TaskLine.product.security.config.JwtProperties;
-import cmdotender.TaskLine.product.web.AuthHeaderUtil;
-import cmdotender.TaskLine.product.web.CookieUtil;
+import cmdotender.TaskLine.product.util.AuthHeaderUtil;
+import cmdotender.TaskLine.product.util.CookieUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtService jwt;
+    private final JwtService jwtService;
     private final JwtProperties props;
     private final UserDetailsService userDetailsService;
 
@@ -45,15 +45,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if(token == null){
             token = AuthHeaderUtil.getBearerToken(request);
         }
-        if(token == null  || !jwt.isValid(token)){
+        if(token == null  || !jwtService.isValid(token)){
             chain.doFilter(request,response);
             return;
         }
-
-        String username = jwt.username(token);
+        String username = jwtService.username(token);
         UserDetails user = userDetailsService.loadUserByUsername(username);
 
-        var tokenAuthorities = jwt.roles(token).stream()
+        var tokenAuthorities = jwtService.roles(token).stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toSet());
 

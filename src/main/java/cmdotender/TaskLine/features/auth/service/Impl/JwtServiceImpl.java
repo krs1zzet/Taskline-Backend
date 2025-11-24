@@ -27,12 +27,12 @@ import io.jsonwebtoken.security.Keys;
 public class JwtServiceImpl implements JwtService {
 
     private final JwtProperties props;
-
     private Key signingKey;
     private JwtParser jwtParser;
 
+
     @PostConstruct
-    void init() {
+    public void init() {
         this.signingKey = Keys.hmacShaKeyFor(props.getSecret().getBytes(StandardCharsets.UTF_8));
         this.jwtParser = Jwts.parserBuilder()
                 .requireIssuer(props.getIssuer())

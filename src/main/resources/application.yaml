@@ -20,6 +20,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
+
   flyway:
     enabled: ${FLYWAY_ENABLED:true}
     baseline-on-migrate: ${FLYWAY_BASELINE_ON_MIGRATE:true}
@@ -71,3 +72,10 @@ management:
     health:
           show-details: always
 
+atlassian:
+  oauth:
+    client-id: ${JIRA_CLIENT_ID:YOUR_CLIENT_ID}
+    client-secret: ${JIRA_CLIENT_SECRET:YOUR_CLIENT_SECRET}
+    redirect-uri: ${JIRA_REDIRECT_URI:http://localhost:8080/api/auth/oauth/jira/callback}
+    scopes: ${JIRA_SCOPES:read:jira-user read:jira-work write:jira-work offline_access}
+    frontend-redirect-uri: ${JIRA_FRONTEND_REDIRECT_URI:http://localhost:5173/jira-setup}

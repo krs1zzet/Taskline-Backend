@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -26,13 +27,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RequestLoggingFilter extends OncePerRequestFilter {
 
-    private final FilterChainProxy springSecurityFilterChain;
 
     @Override
     protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
         long start = System.currentTimeMillis();
@@ -54,9 +54,6 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
 
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             String principal = (auth != null) ? auth.getName() : "anonymous";
-
-
-
             log.info("""
                     [REQ {}]
                       Method   : {}

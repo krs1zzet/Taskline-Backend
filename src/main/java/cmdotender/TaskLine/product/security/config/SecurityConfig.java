@@ -65,7 +65,12 @@ public class SecurityConfig {
                                 "/api/auth/**",
                                 "/actuator/**",
                                 "/health",
-                                "/error"
+                                "/error",
+                                "/swagger-ui/**",
+                                "/favicon.ico",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**",
+                                "/api/atlassian/OAuth/**"
 
                         ).permitAll()
                         .anyRequest().authenticated()
