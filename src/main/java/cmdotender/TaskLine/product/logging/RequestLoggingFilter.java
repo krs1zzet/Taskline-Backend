@@ -4,6 +4,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -21,18 +22,15 @@ import java.util.List;
 import java.util.UUID;
 
 @Slf4j
-@Component
-@Order(Ordered.HIGHEST_PRECEDENCE)
 @RequiredArgsConstructor
 public class RequestLoggingFilter extends OncePerRequestFilter {
 
-    private final FilterChainProxy springSecurityFilterChain;
 
     @Override
     protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
 
         long start = System.currentTimeMillis();
@@ -45,7 +43,6 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
         String fullPath = (query != null && !query.isBlank()) ? uri + "?" + query : uri;
         String remoteIp = request.getRemoteAddr();
 
-
         try {
             filterChain.doFilter(request, response);
         } finally {
@@ -54,8 +51,6 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
 
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             String principal = (auth != null) ? auth.getName() : "anonymous";
-
-
 
             log.info("""
                     [REQ {}]

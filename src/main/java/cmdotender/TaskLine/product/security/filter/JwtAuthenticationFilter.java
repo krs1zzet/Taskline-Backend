@@ -2,14 +2,15 @@ package cmdotender.TaskLine.product.security.filter;
 
 import cmdotender.TaskLine.features.auth.service.JwtService;
 import cmdotender.TaskLine.product.security.config.JwtProperties;
-import cmdotender.TaskLine.product.web.AuthHeaderUtil;
-import cmdotender.TaskLine.product.web.CookieUtil;
+import cmdotender.TaskLine.product.util.AuthHeaderUtil;
+import cmdotender.TaskLine.product.util.CookieUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,9 +25,10 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtService jwt;
+    private final JwtService jwtService;
     private final JwtProperties props;
     private final UserDetailsService userDetailsService;
 
@@ -41,19 +43,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
+
+
         String token = CookieUtil.getValue(request, props.getCookie().getName());
         if(token == null){
             token = AuthHeaderUtil.getBearerToken(request);
+            log.info("JWT Filter - Bearer token: {}", token);
         }
-        if(token == null  || !jwt.isValid(token)){
+        if(token == null  || !jwtService.isValid(token)){
             chain.doFilter(request,response);
             return;
         }
-
-        String username = jwt.username(token);
+        String username = jwtService.username(token);
         UserDetails user = userDetailsService.loadUserByUsername(username);
 
-        var tokenAuthorities = jwt.roles(token).stream()
+        var tokenAuthorities = jwtService.roles(token).stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toSet());
 
@@ -63,6 +67,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
         SecurityContextHolder.getContext().setAuthentication(auth);
+        log.info("JWT Filter - Authentication: {}", SecurityContextHolder.getContext().getAuthentication());
         chain.doFilter(request,response);
     }
 }
