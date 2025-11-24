@@ -1,4 +1,4 @@
-package cmdotender.TaskLine.features.auth.controller;
+package cmdotender.TaskLine.features.auth.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
