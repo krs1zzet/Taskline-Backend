@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Slf4j
-@Component
-@Order(Ordered.HIGHEST_PRECEDENCE)
 @RequiredArgsConstructor
 public class RequestLoggingFilter extends OncePerRequestFilter {
 
@@ -45,7 +43,6 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
         String fullPath = (query != null && !query.isBlank()) ? uri + "?" + query : uri;
         String remoteIp = request.getRemoteAddr();
 
-
         try {
             filterChain.doFilter(request, response);
         } finally {
@@ -54,6 +51,7 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
 
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             String principal = (auth != null) ? auth.getName() : "anonymous";
+
             log.info("""
                     [REQ {}]
                       Method   : {}
