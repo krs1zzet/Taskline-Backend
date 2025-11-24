@@ -1,7 +1,7 @@
 package cmdotender.TaskLine.features.auth.service.Impl;
 
 
-import cmdotender.TaskLine.features.auth.controller.AtlassianClient;
+import cmdotender.TaskLine.features.auth.service.AtlassianClient;
 import cmdotender.TaskLine.features.auth.dto.AccessibleResourceDTO;
 import cmdotender.TaskLine.features.auth.dto.JiraContext;
 import cmdotender.TaskLine.features.user.dto.UserDTO;
