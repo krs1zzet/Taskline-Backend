@@ -41,7 +41,6 @@ public class JiraContextService {
             throw new ApiException(ErrorCode.RESOURCE_NOT_FOUND, "No accessible Atlassian resources found");
         }
 
-        // Şimdilik sanipak domain’ine göre filtreliyoruz
         AccessibleResourceDTO jiraResource = Arrays.stream(resources)
                 .filter(r -> r.getUrl() != null && r.getUrl().contains("sanipak.atlassian.net"))
                 .findFirst()
