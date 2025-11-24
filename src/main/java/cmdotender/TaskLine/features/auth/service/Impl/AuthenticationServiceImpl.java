@@ -50,7 +50,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
 
     @Override
-    public AuthDTO signUp(SignUpRequest request) {
+    public UserDTO signUp(SignUpRequest request) {
 
         UserDTO userDTO = userService.save(request.getUsername());
 
@@ -65,12 +65,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
         userCredentialRepository.save(userCredential);
 
-        String accessToken = jwtService.generateAccessToken(user.getUsername(),getUserRoles(user));
-
-        return AuthDTO.builder()
-                .user(userDTO)
-                .accessToken(accessToken)
-                .build();
+        return userDTO;
     }
 
     @Override
@@ -101,7 +96,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         String accessToken = jwtService.generateAccessToken(
                 user.getUsername(),
                 getUserRoles(user)
-                );
+        );
 
         UserDTO userDTO = userMapper.toDTO(user);
 
@@ -109,7 +104,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .user(userDTO)
                 .accessToken(accessToken)
                 .build();
-
     }
 
     @Override
@@ -166,14 +160,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             );
 
         }
-
         String accessToken = jwtService.generateAccessToken(user.getUsername(),getUserRoles(user));
         UserDTO userDTO = userMapper.toDTO(user);
         return AuthDTO.builder()
                 .user(userDTO)
                 .accessToken(accessToken)
                 .build();
-
     }
 
     private List<String> getUserRoles(User user) {
@@ -181,6 +173,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .map(RoleDTO::getCode)
                 .collect(Collectors.toList());
     }
+
 
 
 }
