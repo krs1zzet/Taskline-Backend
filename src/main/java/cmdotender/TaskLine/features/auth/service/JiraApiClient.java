@@ -1,4 +1,4 @@
-package cmdotender.TaskLine.features.auth.controller;
+package cmdotender.TaskLine.features.auth.service;
 
 import cmdotender.TaskLine.features.auth.dto.JiraContext;
 import cmdotender.TaskLine.features.auth.service.Impl.JiraContextService;
