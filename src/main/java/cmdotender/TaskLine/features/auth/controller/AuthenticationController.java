@@ -14,6 +14,7 @@ import cmdotender.TaskLine.product.security.config.AtlassianOAuthProperties;
 import cmdotender.TaskLine.product.security.config.JwtProperties;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -42,21 +43,22 @@ public class AuthenticationController {
 
 
     @PostMapping("/sign-up")
-    public ResponseEntity<AuthDTO> signUp(@RequestBody @Valid SignUpRequest request) {
-        AuthDTO auth = authenticationService.signUp(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(auth);
+    public ResponseEntity<UserDTO> signUp(@RequestBody @Valid SignUpRequest request) {
+        UserDTO userDTO = authenticationService.signUp(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userDTO);
     }
 
     @PostMapping("/sign-in")
-    public ResponseEntity<AuthDTO> signIn(@RequestBody @Valid SignInRequest request) {
+    public ResponseEntity<UserDTO> signIn(@RequestBody @Valid SignInRequest request) {
 
-        AuthDTO auth = authenticationService.signIn(request);
+        AuthDTO authDTO = authenticationService.signIn(request);
+
 
         String cookieName = jwtProperties.getCookie().getName();
         boolean cookieSecure = jwtProperties.getCookie().isSecure();
         long ttlSeconds = jwtProperties.getAccessTtlSeconds();
 
-        ResponseCookie cookie = ResponseCookie.from(cookieName, auth.getAccessToken())
+        ResponseCookie cookie = ResponseCookie.from(cookieName, authDTO.getAccessToken())
                 .httpOnly(true)
                 .secure(cookieSecure)
                 .path("/")
@@ -64,9 +66,11 @@ public class AuthenticationController {
                 .sameSite("Lax")
                 .build();
 
+        UserDTO userDTO = userService.findByUsername(request.getUsername());
+
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(auth);
+                .body(userDTO);
     }
 
     @PostMapping("/change-password")
@@ -103,7 +107,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/oauth/{provider}")
-    public ResponseEntity<AuthDTO> loginWithOAuth(
+    public ResponseEntity<UserDTO> loginWithOAuth(
             @PathVariable String provider,
             @RequestBody @Valid OAuthLoginRequest request
     ) {
@@ -126,9 +130,23 @@ public class AuthenticationController {
                 .sameSite("Lax")
                 .build();
 
+        UserDTO userDTO = userService.findByUsername(request.getEmail());
+
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(auth);
+                .body(userDTO);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserDTO> getCurrentUser(
+            @AuthenticationPrincipal UserDetails principal
+    ) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        UserDTO currentUser = userService.getCurrentUser();
+        return ResponseEntity.ok(currentUser);
     }
 
 
