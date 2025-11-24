@@ -63,6 +63,7 @@ public class AuthenticationController {
                 .secure(cookieSecure)
                 .path("/")
                 .maxAge(ttlSeconds)
+                .domain(jwtProperties.getCookie().getDomain())
                 .sameSite("Lax")
                 .build();
 
