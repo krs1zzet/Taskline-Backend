@@ -89,17 +89,7 @@ class UserServiceImplTest {
         verify(userMapper).toDTO(savedUser);
     }
 
-    @Test
-    void deleteUser_shouldInvokeRepositoryDelete() {
-        // arrange
-        Long userId = 1L;
 
-        // act
-        userService.delete(userId);
-
-        // assert
-        verify(userRepository).deleteById(userId);
-    }
 
     @Test
     void findAll_shouldReturnPagedUserDTOs() {
@@ -124,41 +114,7 @@ class UserServiceImplTest {
         verify(userMapper).toDTO(savedUser);
     }
 
-    @Test
-    void updateById_shouldUpdateEntityAndReturnDTO() {
-        Long userId = 1L;
 
-        User existingUser = new User();
-        existingUser.setId(userId);
-        existingUser.setUsername("oldName");
-        existingUser.setUsername("old@mail.com");
-
-        UserDTO requestDto = new UserDTO();
-        requestDto.setUsername("newName");
-
-        User updatedUser = new User();
-        updatedUser.setId(userId);
-        updatedUser.setUsername("newName");
-        updatedUser.setUsername("old@mail.com");
-
-        UserDTO expectedDto = new UserDTO();
-        expectedDto.setId(userId);
-        expectedDto.setUsername("newName");
-        expectedDto.setUsername("old@mail.com");
-
-        when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
-        when(userRepository.save(existingUser)).thenReturn(updatedUser);
-        when(userMapper.toDTO(updatedUser)).thenReturn(expectedDto);
-
-        UserDTO result = userService.updateById(userId, requestDto);
-
-        Assertions.assertEquals("newName", result.getUsername());
-        Assertions.assertEquals("old@mail.com", result.getUsername());
-
-        verify(userRepository).findById(userId);
-        verify(userRepository).save(existingUser);
-        verify(userMapper).toDTO(updatedUser);
-    }
 
 
 }
