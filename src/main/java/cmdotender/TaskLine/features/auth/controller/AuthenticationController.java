@@ -100,6 +100,7 @@ public class AuthenticationController {
                 .path("/")
                 .maxAge(0)
                 .sameSite("Lax")
+                .domain(jwtProperties.getCookie().getDomain())
                 .build();
 
         return ResponseEntity.ok()
