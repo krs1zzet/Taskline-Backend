@@ -109,7 +109,6 @@ class UserServiceImplTest {
         Assertions.assertEquals(1, resultPage.getTotalElements());
         Assertions.assertEquals(expectedDto.getId(), resultPage.getContent().get(0).getId());
         Assertions.assertEquals(expectedDto.getUsername(), resultPage.getContent().get(0).getUsername());
-
         verify(userRepository).findAll(pageable);
         verify(userMapper).toDTO(savedUser);
     }
