@@ -1,13 +1,10 @@
-package cmdotender.TaskLine.features.jiraApi.dto;
+package cmdotender.TaskLine.features.jira.linkTypes.dto;
 
 import lombok.Data;
 
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-
-import java.util.List;
 
 @Data
 public class JiraIssueLinkResponse {

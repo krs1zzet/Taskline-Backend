@@ -1,4 +1,4 @@
-package cmdotender.TaskLine.features.jiraApi.dto;
+package cmdotender.TaskLine.features.jira.linkTypes.dto;
 
 import lombok.Data;
 

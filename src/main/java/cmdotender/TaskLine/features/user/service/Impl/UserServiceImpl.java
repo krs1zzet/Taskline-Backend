@@ -17,6 +17,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -120,7 +121,6 @@ public class UserServiceImpl implements UserService {
                         ErrorCode.RESOURCE_NOT_FOUND,
                         "User not found with id: " + userId
                 ));
-
         return user.getUserRoles().stream()
                 .map(userRole -> userRole.getRole().getName())
                 .toList();

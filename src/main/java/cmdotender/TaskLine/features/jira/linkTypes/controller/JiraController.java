@@ -1,7 +1,7 @@
-package cmdotender.TaskLine.features.jiraApi.controller;
+package cmdotender.TaskLine.features.jira.linkTypes.controller;
 
-import cmdotender.TaskLine.features.jiraApi.dto.JiraIssueLinkTypeDTO;
-import cmdotender.TaskLine.features.jiraApi.service.JiraService;
+import cmdotender.TaskLine.features.jira.linkTypes.dto.JiraIssueLinkTypeDTO;
+import cmdotender.TaskLine.features.jira.linkTypes.service.JiraService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
