@@ -1,7 +1,7 @@
-package cmdotender.TaskLine.features.jira.issue.controller;
+package cmdotender.TaskLine.features.jira.issuePicker.controller;
 
-import cmdotender.TaskLine.features.jira.issue.dto.BaseIssueDTO;
-import cmdotender.TaskLine.features.jira.issue.service.IssueService;
+import cmdotender.TaskLine.features.jira.issuePicker.dto.BaseIssueDTO;
+import cmdotender.TaskLine.features.jira.issuePicker.service.IssueService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

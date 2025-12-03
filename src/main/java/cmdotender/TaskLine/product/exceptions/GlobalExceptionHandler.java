@@ -35,7 +35,6 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // ==== ORTAK BASE METODLAR ==== //
 
     private ProblemDetail base(ErrorCode code,
                                HttpServletRequest request,
@@ -67,7 +66,6 @@ public class GlobalExceptionHandler {
         return pd;
     }
 
-    // ==== CUSTOM / DOMAIN EXCEPTION ==== //
 
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ProblemDetail> handleApi(ApiException ex,
@@ -82,7 +80,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(code.getStatus()).body(pd);
     }
 
-    // ==== VALIDATION ==== //
 
     // @Valid body validation (DTO)
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -107,7 +104,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(code.getStatus()).body(pd);
     }
 
-    // @Validated parametreler için (ConstraintViolationException)
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ProblemDetail> handleConstraintViolation(ConstraintViolationException ex,
                                                                    HttpServletRequest request) {
@@ -128,7 +124,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(code.getStatus()).body(pd);
     }
 
-    // BindException (özellikle form-data / query param bind hataları)
     @ExceptionHandler(BindException.class)
     public ResponseEntity<ProblemDetail> handleBindException(BindException ex,
                                                              HttpServletRequest request) {
@@ -150,7 +145,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(code.getStatus()).body(pd);
     }
 
-    // ==== REQUEST / PARAM / BODY HATALARI ==== //
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ProblemDetail> handleTypeMismatch(MethodArgumentTypeMismatchException ex,
@@ -167,7 +161,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(code.getStatus()).body(pd);
     }
 
-    // Body okunamıyor (bozuk JSON, boş body vs.)
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ProblemDetail> handleNotReadable(HttpMessageNotReadableException ex,
                                                            HttpServletRequest request) {
@@ -176,7 +169,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(code.getStatus()).body(pd);
     }
 
-    // Required request parameter yok
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ProblemDetail> handleMissingParam(MissingServletRequestParameterException ex,
                                                             HttpServletRequest request) {
@@ -186,9 +178,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(code.getStatus()).body(pd);
     }
 
-    // ==== HTTP / ROUTING ==== //
 
-    // Method not allowed (GET beklerken POST vs.)
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ProblemDetail> handleMethodNotAllowed(HttpRequestMethodNotSupportedException ex,
                                                                 HttpServletRequest request) {
@@ -197,7 +187,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(code.getStatus()).body(pd);
     }
 
-    // Media type desteklenmiyor (Content-Type)
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<ProblemDetail> handleMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex,
                                                                      HttpServletRequest request) {
@@ -206,7 +195,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(code.getStatus()).body(pd);
     }
 
-    // Accept header ile uyuşmuyor
     @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
     public ResponseEntity<ProblemDetail> handleMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException ex,
                                                                       HttpServletRequest request) {
@@ -215,7 +203,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(code.getStatus()).body(pd);
     }
 
-    // No handler found (404 - mapping yok)
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<ProblemDetail> handleNoHandlerFound(NoHandlerFoundException ex,
                                                               HttpServletRequest request) {

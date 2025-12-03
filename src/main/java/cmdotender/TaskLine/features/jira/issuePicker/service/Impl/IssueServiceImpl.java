@@ -1,10 +1,9 @@
-package cmdotender.TaskLine.features.jira.issue.service.Impl;
+package cmdotender.TaskLine.features.jira.issuePicker.service.Impl;
 
-import cmdotender.TaskLine.features.auth.service.AtlassianClient;
 import cmdotender.TaskLine.features.auth.service.JiraApiClient;
-import cmdotender.TaskLine.features.jira.issue.dto.BaseIssueDTO;
-import cmdotender.TaskLine.features.jira.issue.dto.IssuePickerResponseDTO;
-import cmdotender.TaskLine.features.jira.issue.service.IssueService;
+import cmdotender.TaskLine.features.jira.issuePicker.dto.BaseIssueDTO;
+import cmdotender.TaskLine.features.jira.issuePicker.dto.IssuePickerResponseDTO;
+import cmdotender.TaskLine.features.jira.issuePicker.service.IssueService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

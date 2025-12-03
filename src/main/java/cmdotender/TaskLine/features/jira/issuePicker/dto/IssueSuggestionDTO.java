@@ -1,4 +1,4 @@
-package cmdotender.TaskLine.features.jira.issue.dto;
+package cmdotender.TaskLine.features.jira.issuePicker.dto;
 
 import lombok.Data;
 

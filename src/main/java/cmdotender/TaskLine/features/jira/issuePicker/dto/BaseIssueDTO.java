@@ -1,4 +1,4 @@
-package cmdotender.TaskLine.features.jira.issue.dto;
+package cmdotender.TaskLine.features.jira.issuePicker.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BaseIssueDTO {
-    private String id;     // long yerine String önerilir
+    private String id;
     private String key;
     private String summary;
 }
