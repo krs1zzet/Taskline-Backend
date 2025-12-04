@@ -182,4 +182,12 @@ public class UserServiceImpl implements UserService {
         userIdentityRepository.save(userIdentity);
     }
 
+    public String getJiraUserIdByUserId(Long userId) {
+        return userIdentityRepository.findJiraExternalIdByUserId(userId).orElseThrow((
+                () -> new ApiException(
+                        ErrorCode.RESOURCE_NOT_FOUND,
+                        "Jira User ID not found for user with id: " + userId
+                )));
+    }
+
 }

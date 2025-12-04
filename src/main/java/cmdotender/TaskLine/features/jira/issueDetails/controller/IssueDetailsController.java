@@ -52,7 +52,7 @@ public class IssueDetailsController {
     @GetMapping("/user/{jiraUserId}/related-issues")
     public ResponseEntity<List<JiraIssueDTO<ReporterFieldsDTO>>> getRelatedIssuesDetailsByJiraUser(@PathVariable String jiraUserId) {
         List<JiraIssueDTO<ReporterFieldsDTO>> issues =
-                issueDetailsService.getRelatedIssueDetailsWithJiraUserId(jiraUserId);
+                issueDetailsService.getRelatedIssueDetailsWithJiraUserId();
         return ResponseEntity.ok(issues);
     }
 }

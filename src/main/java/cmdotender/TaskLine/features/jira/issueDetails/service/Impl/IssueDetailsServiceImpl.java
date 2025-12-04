@@ -6,6 +6,7 @@ import cmdotender.TaskLine.features.jira.issueDetails.dto.ReporterFieldsDTO;
 import cmdotender.TaskLine.features.jira.issueDetails.dto.TeamMembersFieldsDTO;
 import cmdotender.TaskLine.features.jira.issueDetails.service.IssueDetailsService;
 
+import cmdotender.TaskLine.features.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ import java.util.Map;
 public class IssueDetailsServiceImpl implements IssueDetailsService {
 
     private final JiraApiClient jiraApiClient;
+    private final UserService userService;
 
     @Override
     public JiraIssueDTO<TeamMembersFieldsDTO> getProjectTeamByIssueKey(String issueKey) {
@@ -55,8 +57,9 @@ public class IssueDetailsServiceImpl implements IssueDetailsService {
 
 
     @Override
-    public List<JiraIssueDTO<ReporterFieldsDTO>> getRelatedIssueDetailsWithJiraUserId(String jiraUserId) {
-
+    public List<JiraIssueDTO<ReporterFieldsDTO>> getRelatedIssueDetailsWithJiraUserId() {
+        Long userId = userService.getCurrentUser().getId();
+        String jiraUserId = userService.getJiraUserIdByUserId(userId);
         List<String> issueIds = getIssueIdsByJiraUserId(jiraUserId);
         List<JiraIssueDTO<ReporterFieldsDTO>> issues = new ArrayList<>();
 

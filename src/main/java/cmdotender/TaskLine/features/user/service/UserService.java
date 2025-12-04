@@ -19,5 +19,5 @@ public interface UserService {
     UserDTO getCurrentUser();
     String getJiraAccessTokenByUserId(Long id);
     void setJiraAccessToken(Long userId, String accessToken);
-
+    String getJiraUserIdByUserId(Long userId);
 }
