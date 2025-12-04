@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BaseIssueDTO {
+public class BaseIssuePickerDTO {
     private String id;
     private String key;
     private String summary;
