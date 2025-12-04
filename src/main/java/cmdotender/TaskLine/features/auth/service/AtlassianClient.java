@@ -1,6 +1,7 @@
 package cmdotender.TaskLine.features.auth.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -34,6 +35,21 @@ public class AtlassianClient {
         );
         return response.getBody();
     }
+
+    public <T> T get(String url, String accessToken, ParameterizedTypeReference<T> typeRef) {
+        HttpHeaders headers = createHeaders(accessToken);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<T> response = restTemplate.exchange(
+                url,
+                HttpMethod.GET,
+                entity,
+                typeRef
+        );
+        return response.getBody();
+    }
+
+
 
     public <T> T post(String url, String accessToken, Object body, Class<T> responseType) {
         HttpHeaders headers = createHeaders(accessToken);
