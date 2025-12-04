@@ -1,6 +1,6 @@
 package cmdotender.TaskLine.features.jira.issuePicker.controller;
 
-import cmdotender.TaskLine.features.jira.issuePicker.dto.BaseIssueDTO;
+import cmdotender.TaskLine.features.jira.issuePicker.dto.BaseIssuePickerDTO;
 import cmdotender.TaskLine.features.jira.issuePicker.service.IssueService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,9 +21,9 @@ public class IssueController {
     private final IssueService issueService;
 
     @GetMapping("/picker")
-    public ResponseEntity<List<BaseIssueDTO>> picker(@RequestParam String query) {
+    public ResponseEntity<List<BaseIssuePickerDTO>> picker(@RequestParam String query) {
 
-        List<BaseIssueDTO> issues = issueService.IssuePicker(query);
+        List<BaseIssuePickerDTO> issues = issueService.issuePicker(query);
         log.info("Issue picker response: {}", issues);
         return ResponseEntity.ok(issues);
 
