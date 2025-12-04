@@ -4,6 +4,7 @@ import cmdotender.TaskLine.features.auth.dto.JiraContext;
 import cmdotender.TaskLine.features.auth.service.Impl.JiraContextService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -31,6 +32,19 @@ public class JiraApiClient {
 
         return atlassianClient.get(url, ctx.getAccessToken(), responseType);
     }
+
+
+    public <T> T get(String path, ParameterizedTypeReference<T> typeRef) {
+        JiraContext ctx = jiraContextService.getContextForCurrentUser();
+
+        String normalizedPath = normalizePath(path);
+        String url = ctx.getBaseApiUrl() + normalizedPath;
+
+        log.info("Calling Jira GET: {}", url);
+
+        return atlassianClient.get(url, ctx.getAccessToken(), typeRef);
+    }
+
 
     public <T> T post(String path, Object body, Class<T> responseType) {
         JiraContext ctx = jiraContextService.getContextForCurrentUser();
