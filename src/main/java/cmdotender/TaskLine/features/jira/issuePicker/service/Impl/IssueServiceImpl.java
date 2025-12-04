@@ -1,7 +1,7 @@
 package cmdotender.TaskLine.features.jira.issuePicker.service.Impl;
 
 import cmdotender.TaskLine.features.auth.service.JiraApiClient;
-import cmdotender.TaskLine.features.jira.issuePicker.dto.BaseIssueDTO;
+import cmdotender.TaskLine.features.jira.issuePicker.dto.BaseIssuePickerDTO;
 import cmdotender.TaskLine.features.jira.issuePicker.dto.IssuePickerResponseDTO;
 import cmdotender.TaskLine.features.jira.issuePicker.service.IssueService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ public class IssueServiceImpl implements IssueService {
     private final JiraApiClient jiraApiClient;
 
     @Override
-    public List<BaseIssueDTO> IssuePicker(String query) {
+    public List<BaseIssuePickerDTO> issuePicker(String query) {
 
         String path = UriComponentsBuilder
                 .fromPath("/issue/picker")
@@ -35,7 +35,7 @@ public class IssueServiceImpl implements IssueService {
         return response.getSections().stream()
                 .filter(s -> s.getIssues() != null)
                 .flatMap(s -> s.getIssues().stream())
-                .map(i -> new BaseIssueDTO(
+                .map(i -> new BaseIssuePickerDTO(
                         i.getId(),
                         i.getKey(),
                         (i.getSummaryText() != null && !i.getSummaryText().isBlank())
