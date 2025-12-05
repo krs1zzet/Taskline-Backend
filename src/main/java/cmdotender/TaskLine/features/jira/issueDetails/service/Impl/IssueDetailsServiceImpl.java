@@ -74,7 +74,9 @@ public class IssueDetailsServiceImpl implements IssueDetailsService {
     @Override
     public List<String> getIssueIdsByJiraUserId(String jiraUserId) {
         String jql = "assignee = \"" + jiraUserId + "\""
-                + " AND reporter = \"" + jiraUserId + "\""
+                + " OR reporter = \"" + jiraUserId + "\""
+                + " OR \"Project Team\" = \"" + jiraUserId + "\""
+                + " OR \"It Project Leader\" = \"" + jiraUserId + "\""
                 + " AND project in (PPM)"
                 + " ORDER BY updated DESC";
 
