@@ -93,7 +93,8 @@ public class IssueDetailsServiceImpl implements IssueDetailsService {
                 + " OR \"Project Team\" = \"" + jiraUserId + "\""
                 + " OR \"IT Project Leader\" = \"" + jiraUserId + "\""
                 + ")"
-                + " AND project = (PPM)"
+                + " AND issuetype = Project"
+                + " AND project = PPM"
                 + " AND statusCategory != Done"
                 + " ORDER BY updated DESC";
 
