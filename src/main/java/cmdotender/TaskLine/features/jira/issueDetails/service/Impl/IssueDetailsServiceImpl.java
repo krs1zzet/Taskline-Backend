@@ -45,7 +45,7 @@ public class IssueDetailsServiceImpl implements IssueDetailsService {
     public JiraIssueDTO<IssueFieldsDTO> getIssueReporterByIssueKey(String issueKey) {
         String path = UriComponentsBuilder
                 .fromPath("/issue/{issueKey}")
-                .queryParam("fields", "status,summary,reporter")
+                .queryParam("fields", "status,summary,reporter,updated")
                 .buildAndExpand(issueKey)
                 .encode()
                 .toUriString();
