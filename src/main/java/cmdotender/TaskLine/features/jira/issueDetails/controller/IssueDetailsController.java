@@ -1,5 +1,6 @@
 package cmdotender.TaskLine.features.jira.issueDetails.controller;
 
+import cmdotender.TaskLine.features.jira.issueDetails.dto.IssueFieldsDTO;
 import cmdotender.TaskLine.features.jira.issueDetails.dto.JiraIssueDTO;
 import cmdotender.TaskLine.features.jira.issueDetails.dto.ReporterFieldsDTO;
 import cmdotender.TaskLine.features.jira.issueDetails.dto.TeamMembersFieldsDTO;
@@ -32,8 +33,8 @@ public class IssueDetailsController {
         return ResponseEntity.ok(response);
     }
     @GetMapping("/{issueKey}/reporter")
-    public ResponseEntity<JiraIssueDTO<ReporterFieldsDTO>> getIssueReporter(@PathVariable String issueKey){
-        JiraIssueDTO<ReporterFieldsDTO> response =
+    public ResponseEntity<JiraIssueDTO<IssueFieldsDTO>> getIssueReporter(@PathVariable String issueKey){
+        JiraIssueDTO<IssueFieldsDTO> response =
                 issueDetailsService.getIssueReporterByIssueKey(issueKey);
 
         if (response == null) {
@@ -49,10 +50,17 @@ public class IssueDetailsController {
         return ResponseEntity.ok(issueIds);
     }
 
-    @GetMapping("/user/{jiraUserId}/related-issues")
-    public ResponseEntity<List<JiraIssueDTO<ReporterFieldsDTO>>> getRelatedIssuesDetailsByJiraUser(@PathVariable String jiraUserId) {
-        List<JiraIssueDTO<ReporterFieldsDTO>> issues =
+    @GetMapping("/user/related-issues")
+    public ResponseEntity<List<JiraIssueDTO<IssueFieldsDTO>>> getRelatedIssuesDetailsByJiraUser() {
+        List<JiraIssueDTO<IssueFieldsDTO>> issues =
                 issueDetailsService.getRelatedIssueDetailsWithJiraUserId();
+        return ResponseEntity.ok(issues);
+    }
+
+    @GetMapping("/user/{jiraUserId}/related-issues")
+    public ResponseEntity<List<JiraIssueDTO<IssueFieldsDTO>>> getRelatedIssuesDetailsByJiraUser(@PathVariable String jiraUserId) {
+        List<JiraIssueDTO<IssueFieldsDTO>> issues =
+                issueDetailsService.getRelatedIssueDetailsWithJiraUserIdExternal(jiraUserId);
         return ResponseEntity.ok(issues);
     }
 }

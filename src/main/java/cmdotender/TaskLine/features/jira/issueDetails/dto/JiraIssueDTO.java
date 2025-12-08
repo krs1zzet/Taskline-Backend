@@ -11,6 +11,5 @@ import lombok.*;
 public class JiraIssueDTO<T> {
     private String id;
     private String key;
-//    private String self;
     private T fields;
 }

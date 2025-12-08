@@ -10,8 +10,4 @@ import lombok.*;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StatusFieldsDTO {
     private StatusDTO status;
-
-
-
-
 }

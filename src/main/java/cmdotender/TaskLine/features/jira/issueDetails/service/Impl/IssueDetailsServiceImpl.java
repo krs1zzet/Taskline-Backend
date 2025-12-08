@@ -1,6 +1,7 @@
 package cmdotender.TaskLine.features.jira.issueDetails.service.Impl;
 
 import cmdotender.TaskLine.features.auth.service.JiraApiClient;
+import cmdotender.TaskLine.features.jira.issueDetails.dto.IssueFieldsDTO;
 import cmdotender.TaskLine.features.jira.issueDetails.dto.JiraIssueDTO;
 import cmdotender.TaskLine.features.jira.issueDetails.dto.ReporterFieldsDTO;
 import cmdotender.TaskLine.features.jira.issueDetails.dto.TeamMembersFieldsDTO;
@@ -41,30 +42,43 @@ public class IssueDetailsServiceImpl implements IssueDetailsService {
     }
 
     @Override
-    public JiraIssueDTO<ReporterFieldsDTO> getIssueReporterByIssueKey(String issueKey) {
+    public JiraIssueDTO<IssueFieldsDTO> getIssueReporterByIssueKey(String issueKey) {
         String path = UriComponentsBuilder
                 .fromPath("/issue/{issueKey}")
-                .queryParam("fields", "reporter")
+                .queryParam("fields", "status,summary,reporter")
                 .buildAndExpand(issueKey)
                 .encode()
                 .toUriString();
 
         return jiraApiClient.get(
                 path,
-                new ParameterizedTypeReference<JiraIssueDTO<ReporterFieldsDTO>>() {}
+                new ParameterizedTypeReference<JiraIssueDTO<IssueFieldsDTO>>() {}
         );
     }
 
 
     @Override
-    public List<JiraIssueDTO<ReporterFieldsDTO>> getRelatedIssueDetailsWithJiraUserId() {
+    public List<JiraIssueDTO<IssueFieldsDTO>> getRelatedIssueDetailsWithJiraUserId() {
         Long userId = userService.getCurrentUser().getId();
         String jiraUserId = userService.getJiraUserIdByUserId(userId);
         List<String> issueIds = getIssueIdsByJiraUserId(jiraUserId);
-        List<JiraIssueDTO<ReporterFieldsDTO>> issues = new ArrayList<>();
+        List<JiraIssueDTO<IssueFieldsDTO>> issues = new ArrayList<>();
 
         for (String issueId : issueIds) {
-            JiraIssueDTO<ReporterFieldsDTO> issue = getIssueReporterByIssueKey(issueId);
+            JiraIssueDTO<IssueFieldsDTO> issue = getIssueReporterByIssueKey(issueId);
+            issues.add(issue);
+        }
+        return issues;
+
+    }
+
+    @Override
+    public List<JiraIssueDTO<IssueFieldsDTO>> getRelatedIssueDetailsWithJiraUserIdExternal(String jiraUserId) {
+        List<String> issueIds = getIssueIdsByJiraUserId(jiraUserId);
+        List<JiraIssueDTO<IssueFieldsDTO>> issues = new ArrayList<>();
+
+        for (String issueId : issueIds) {
+            JiraIssueDTO<IssueFieldsDTO> issue = getIssueReporterByIssueKey(issueId);
             issues.add(issue);
         }
         return issues;
@@ -73,11 +87,14 @@ public class IssueDetailsServiceImpl implements IssueDetailsService {
 
     @Override
     public List<String> getIssueIdsByJiraUserId(String jiraUserId) {
-        String jql = "assignee = \"" + jiraUserId + "\""
+        String jql = "("
+                + "assignee = \"" + jiraUserId + "\""
                 + " OR reporter = \"" + jiraUserId + "\""
                 + " OR \"Project Team\" = \"" + jiraUserId + "\""
-                + " OR \"It Project Leader\" = \"" + jiraUserId + "\""
-                + " AND project in (PPM)"
+                + " OR \"IT Project Leader\" = \"" + jiraUserId + "\""
+                + ")"
+                + " AND project = (PPM)"
+                + " AND statusCategory != Done"
                 + " ORDER BY updated DESC";
 
         String url = UriComponentsBuilder

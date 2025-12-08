@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class StatusCategoryDTO {
+    private String id;
+    private String key;
     private String colorName;
     private String name;
 }
